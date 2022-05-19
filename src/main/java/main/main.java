@@ -1,6 +1,13 @@
 package main;
 
+import java.util.ArrayList;
+
 public class main {
+
+    static int m,n;
+    static String[][] matriz = new String[m][n];
+    static ArrayList<String> list = new ArrayList<>();
+
     public static void main(String[] args) {
 
         //First Exercise
@@ -50,5 +57,33 @@ public class main {
         reversedWord.reverse();
         return originalWord.equalsIgnoreCase(reversedWord.toString());
     }
+
+    public static boolean laberynth(int x, int y){
+        boolean result;
+        if (matriz[x][y].equals("x") || x<0 || y<0 ||x>(m-1) || y>(n-1))return false;
+        if ( matriz[x][y].equals("*"))return false;
+        if (x==(m-1)){ //base condition, arrive to the last row.
+            matriz[x][y]="*";
+            list.add(x+","+ y);
+            return true;
+        }
+        // if i get here is because the spot is free
+        matriz[x][y]="*"; //I set it as a non free spot
+        list.add(x+","+ y); //and I add it to the right path
+        result = laberynth((x+1), y); ////first recursive call (trying to move down)
+        if (result) return true;
+        result = laberynth((x), (y+1));////second recursive call (trying to move to theright)
+        if (result) return true;
+        if (matriz[x][y-1].equals("*")){ //if i'm comming back from where I came im in the wrong path
+            list.remove(x+","+y); //drop it from list
+            matriz[x][y]=" ";
+        }
+        result = laberynth(x, (y-1));//third recursive call (trying to move left)
+        if (result){
+            return true;
+        }
+        return false;
+    }
+
 
 }
